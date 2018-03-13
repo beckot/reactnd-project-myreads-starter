@@ -7,15 +7,45 @@ import './App.css'
 
 class BooksApp extends React.Component {
   
-  state = {
-    books: []
-  }
+    state = {
+      books: []
+    }
 
-  componentDidMount(){
+
+  componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.setState( {books} )
+      this.setState( { books } )
     })
   }
+
+  changeBookShelf(book, newShelf) {
+    
+     // 1. Update the book shelf in the API
+      BooksAPI.update(book, newShelf).then( () => {
+        
+        this.setState( state => ({
+          
+          // 2. Constuct a new book array and change the shelf for the single book we are changing....
+          books: state.books.map( oldBook => {
+
+            // Test whether the current book ID matches the one we are replacing...
+            oldBook.id === book.id ?
+
+            // If there's a match, use the ES6 spread operator (...) to expand the book object and modify the existing shelf name
+            { ...oldBook, shelf: newShelf } :
+
+            // Otherwise, just use the existing book element.
+            oldBook
+                            
+          })
+
+        }))
+
+      })
+
+  }
+
+
 
   render() {
     
@@ -33,17 +63,29 @@ class BooksApp extends React.Component {
 
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
-                  <BookShelf shelfType="currentlyReading" books={this.state.books} />
+                  <BookShelf 
+                    shelfType="currentlyReading"
+                    books={this.state.books} 
+                    onChangeShelf={this.changeBookShelf}
+                    />
                 </div>
                 
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
-                  <BookShelf shelfType="wantToRead" books={this.state.books} />
+                  <BookShelf 
+                    shelfType="wantToRead"
+                    books={this.state.books} 
+                    onChangeShelf={this.changeBookShelf}
+                    />
                 </div>
                 
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
-                  <BookShelf shelfType="read" books={this.state.books} />
+                  <BookShelf 
+                    shelfType="read"
+                    books={this.state.books} 
+                    onChangeShelf={this.changeBookShelf}
+                    />
                 </div>
                 
               </div>
