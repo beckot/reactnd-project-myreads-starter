@@ -7,9 +7,9 @@ import './App.css'
 
 class BooksApp extends React.Component {
   
-    state = {
-      books: []
-    }
+  state = {
+    books: []
+  }
 
 
   componentDidMount() {
@@ -18,32 +18,27 @@ class BooksApp extends React.Component {
     })
   }
 
-  changeBookShelf(book, newShelf) {
-    
-     // 1. Update the book shelf in the API
-      BooksAPI.update(book, newShelf).then( () => {
+
+  changeBookShelf = (bookToMove, newShelfValue) => {
+
+    this.setState(state => {
         
-        this.setState( state => ({
-          
-          // 2. Constuct a new book array and change the shelf for the single book we are changing....
-          books: state.books.map( oldBook => {
+        // Filter out all other books except this book.  
+        const otherBooks = state.books.filter(book => book.id !== bookToMove.id);
+        
+        // Update shelf value
+        bookToMove.shelf = newShelfValue
+         
+        // Return a new collection of books where we have added the bookToMove with a new shelf value to the end of the array.
+        return {
+          books: otherBooks.concat(bookToMove)
+      };
+    });
 
-            // Test whether the current book ID matches the one we are replacing...
-            oldBook.id === book.id ?
-
-            // If there's a match, use the ES6 spread operator (...) to expand the book object and modify the existing shelf name
-            { ...oldBook, shelf: newShelf } :
-
-            // Otherwise, just use the existing book element.
-            oldBook
-                            
-          })
-
-        }))
-
-      })
-
+    //Update the database
+    BooksAPI.update(bookToMove, newShelfValue);
   }
+
 
 
 
