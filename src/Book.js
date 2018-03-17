@@ -2,47 +2,61 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 class Book extends Component {
-
-    state = { 
-        selectedShelf: ''
-    }
-
+    
     static propTypes = {
-
         book: PropTypes.object.isRequired,
-        onChangeShelf: PropTypes.func.isRequired
-
+        onChangeShelf: PropTypes.func.isRequired,
+        shelves: PropTypes.array.isRequired
     }
 
     render() {
+        
+        const currentBook = this.props.book
+
+        // Print book thumbnail in case there is one
+        const bookCoverHTML = ( currentBook.hasOwnProperty("imageLinks") && currentBook.imageLinks.hasOwnProperty("smallThumbnail") ) ? (
+            <div className="book-cover" style={{width: 128, height: 193, backgroundImage: `url(${currentBook.imageLinks.smallThumbnail})`}}></div>
+        ) : (
+            <div className="book-cover">></div>
+        )
+
+        const optionsHTML = (
+            <select value={currentBook.shelf} onChange={e => this.props.onChangeShelf( currentBook, e.target.value )}>
+                <option value="move-to-option" disabled >Move to...</option>
+                {this.props.shelves.map( shelf => {
+                    return <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
+                })}
+                <option value="none">None</option>   
+            </select>
+        )
+    
+        const authorsHTML = (
+            
+            <div className="book-authors">
+                {  
+
+                    this.props.book.hasOwnProperty("authors") &&
+                    this.props.book.authors.map( (author) => {
+                        return( <div key={this.props.book.id + author}>{author}</div> )
+                    })                  
+                }
+            </div>    
+        
+        )
+        
 
         return(
         
             <div className="book">
                 <div className="book-top">
-                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.smallThumbnail})` }}></div>
+                {bookCoverHTML}
                 <div className="book-shelf-changer">
-                    <select onChange={ (event) => {
-                            this.props.onChangeShelf( this.props.book, event.target.value ) 
-                        }
-                    }>
-                    <option value="none" defaultValue >Move to...</option>
-                    <option value="currentlyReading">Currently Reading</option>
-                    <option value="wantToRead">Want to Read</option>
-                    <option value="read">Read</option>
-                    <option value="none">None</option>
-                    </select>
+                    {console.log(currentBook.title + " -shelf: " + currentBook.shelf)}
+                    {optionsHTML}
                 </div>
                 </div>
                 <div className="book-title">{this.props.book.title}</div>
-                <div className="book-authors">
-                    
-                    {this.props.book.authors.map( (author) => (
-                    
-                        <div key={this.props.book.id + author}>{author}</div>
-                    
-                    ) 
-                    )}</div>
+                {authorsHTML}
             </div>
 
         )
