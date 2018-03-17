@@ -51,7 +51,6 @@ class Book extends Component {
                 <div className="book-top">
                 {bookCoverHTML}
                 <div className="book-shelf-changer">
-                    {console.log(currentBook.title + " -shelf: " + currentBook.shelf)}
                     {optionsHTML}
                 </div>
                 </div>
