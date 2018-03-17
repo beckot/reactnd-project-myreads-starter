@@ -14,10 +14,10 @@ class Book extends Component {
         const currentBook = this.props.book
 
         // Print book thumbnail in case there is one
-        const bookCoverHTML = ( currentBook.hasOwnProperty("imageLinks") && currentBook.imageLinks.hasOwnProperty("smallThumbnail") ) ? (
-            <div className="book-cover" style={{width: 128, height: 193, backgroundImage: `url(${currentBook.imageLinks.smallThumbnail})`}}></div>
+        const bookCoverHTML = ( currentBook.hasOwnProperty("imageLinks") && currentBook.imageLinks.hasOwnProperty("thumbnail") ) ? (
+            <div className="book-cover" style={{width: 128, height: 193, backgroundImage: `url(${currentBook.imageLinks.thumbnail})`}}></div>
         ) : (
-            <div className="book-cover">></div>
+            <div className="book-cover" style={{width: 128, height: 193 }}></div>
         )
 
         const optionsHTML = (

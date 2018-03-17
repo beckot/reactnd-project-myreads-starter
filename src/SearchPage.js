@@ -23,15 +23,14 @@ class SearchPage extends Component {
 
 
     updateQuery = (query) => { 
-        if(query) {
-            this.setState({query: query})
-            this.getBooks(query)
-        }
+        this.setState({query: query})
+        query && this.getBooks(query)
     }
+    
 
     getBooks = (query) => {
         BooksAPI.search(query).then(searchResults => {
-        
+            
             if (searchResults.hasOwnProperty("error")) {
                 this.setState({errorMessage: searchResults.error});
             } else {
